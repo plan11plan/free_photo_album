@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Manage</title>
+</head>
+<body>
+<h1>Manage Users</h1>
+<table id="usersTable">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- User rows will be appended here -->
+    </tbody>
+</table>
+<button id="homeButton">Go to Home</button>
+<script>
+    async function fetchUsers() {
+        const token = localStorage.getItem('token');
+        const response = await fetch('/api/admin/users', {
+            headers: {
+                'Authorization': 'Bearer ' + token
+            }
+        });
+        const users = await response.json();
+        const usersTable = document.getElementById('usersTable').getElementsByTagName('tbody')[0];
+        users.forEach(user => {
+            const row = usersTable.insertRow();
+            row.insertCell(0).innerText = user.user_id;
+            row.insertCell(1).innerText = user.name;
+            row.insertCell(2).innerText = user.email;
+            const deleteCell = row.insertCell(3);
+            const deleteButton = document.createElement('button');
+            deleteButton.innerText = 'Delete';
+            deleteButton.onclick = () => deleteUser(user.user_id);
+            deleteCell.appendChild(deleteButton);
+        });
+    }
+
+    async function deleteUser(userId) {
+        const token = localStorage.getItem('token');
+        const response = await fetch('/api/admin/users', {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token
+            },
+            body: JSON.stringify({ user_id: userId })
+        });
+        if (response.ok) {
+            alert('User deleted');
+            location.reload();
+        } else {
+            const data = await response.json();
+            alert('Error: ' + data.message);
+        }
+    }
+
+    document.getElementById('homeButton').addEventListener('click', () => {
+        window.location.href = '/home';
+    });
+
+    window.onload = fetchUsers;
+</script>
+</body>
+</html>
