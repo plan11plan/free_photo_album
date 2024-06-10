@@ -2,9 +2,101 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Album</title>
+    <link rel="stylesheet" href="/css/common.css">
+    <link rel="stylesheet" href="/css/albumPage.css">
+    <link rel="stylesheet" href="/css/photo.css">
+    <style>
+        .photo-popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            max-width: 500px;
+            background: white;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+        }
+        .photo-popup.active {
+            display: block;
+        }
+        .photo-popup img {
+            width: 100%;
+            height: auto;
+        }
+        .photo-popup .details {
+            padding: 15px;
+        }
+        .photo-popup .details p {
+            margin: 5px 0;
+            color: black; /* 글씨 색을 검정색으로 설정 */
+
+        }
+        .photo-popup .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: transparent;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+        }
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+        .overlay.active {
+            display: block;
+        }
+    </style>
 </head>
 <body>
+<!-- 로딩 애니메이션 추가 -->
+<div id="loading" class="loading" style="display: none;"></div>
+<div id="main-content">
+    <div id="header">
+        <h1>Album</h1>
+        <button id="upload-photo-btn" onclick="toggleUploadForm()" style="display: none;">Upload Photo</button>
+    </div>
+    <div id="photo-list">
+        <!-- 사진 목록이 여기에 표시됩니다 -->
+    </div>
+</div>
 
+<!-- Upload Form Popup -->
+<div id="upload-popup" class="upload-popup">
+    <div class="upload-content">
+        <button class="close-btn" onclick="toggleUploadForm()">&times;</button>
+        <h2>Upload Photo</h2>
+        <input type="file" id="photo-input" multiple>
+        <button id="submit-photo-btn" onclick="submitPhoto()">Upload</button>
+    </div>
+</div>
+
+<!-- Photo Details Popup -->
+<div id="photo-popup" class="photo-popup">
+    <button class="close-btn" onclick="togglePhotoPopup()">&times;</button>
+    <img id="popup-photo" src="" alt="Photo">
+    <div class="details">
+        <p id="popup-file-name"></p>
+        <p id="popup-upload-date"></p>
+        <p id="popup-file-size"></p>
+    </div>
+</div>
+
+<!-- Overlay -->
+<div id="overlay" class="overlay"></div>
+
+<script src="/js/auth.js"></script>
+<script src="/js/albumPage.js"></script>
 </body>
 </html>
